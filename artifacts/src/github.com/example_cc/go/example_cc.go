@@ -18,6 +18,8 @@ package main
 
 
 import (
+	"encoding/json"
+
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
 )
@@ -57,12 +59,11 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	return shim.Error("Invalid Smart Contract function name.")
 }
 
-func (t *SimpleChaincode) hospitalRequest(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (t *SimpleChaincode) hospitalRequest(APIstub shim.ChaincodeStubInterface, args []string) pb.Response {
 
 	if len(args) != 4 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
-
 
 	var request = SimpleChaincode{hospitalName: args[1], assetRequested: args[2], volunteerName: args[3]}
 
@@ -73,21 +74,11 @@ func (t *SimpleChaincode) hospitalRequest(APIstub shim.ChaincodeStubInterface, a
 }
 
 
-func (t *SimpleChaincode) volunteerRequest(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (t *SimpleChaincode) volunteerRequest(APIstub shim.ChaincodeStubInterface, args []string) pb.Response {
 
 	if len(args) != 3 {
 		return shim.Error("Incorrect number of arguments. Expecting 3")
 	}
-
-	carAsBytes, _ := APIstub.GetState(args[0])
-	car := Car{}
-
-	json.Unmarshal(carAsBytes, &car)
-	car.volunteerSuccess = args[1]
-	car.ngoName = args[2]
-
-	carAsBytes, _ = json.Marshal(car)
-	APIstub.PutState(args[0], carAsBytes)
 
 	return shim.Success(nil)
 }
