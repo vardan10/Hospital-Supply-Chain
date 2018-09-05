@@ -120,7 +120,7 @@ organizations:
     # this way. The SDK should allow applications to set the org admin identity via APIs, and only use
     # this route as an alternative when it exists.
     adminPrivateKey:
-      path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/5890f0061619c06fb29dea8cb304edecc020fe63f41a6db109f1e227cc1cb2a8_sk
+      path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/90fc6973b235c945729e056ac64c5d3cc838981a686219fb0bf32fdbe01c7879_sk
     signedCert:
       path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
 
@@ -137,9 +137,22 @@ organizations:
     certificateAuthorities:
       - ca-org2
     adminPrivateKey:
-      path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/1995b11d6573ed3be52fcd7a5fa477bc0f183e1f5f398c8281d0ce7c2c75a076_sk
+      path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/a7ba34b5031015f28822e71730368e0fa4b46e77c844ef3a012f8846cc5269bf_sk
     signedCert:
       path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem
+
+  Org3:
+    mspid: Org3MSP
+    peers:
+      - peer0.org3.example.com
+      - peer1.org3.example.com
+    certificateAuthorities:
+      - ca-org3
+    adminPrivateKey:
+      path: artifacts/channel/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/keystore/4ad98f6df6e92e53d5f106f0b8d6c07f74f7e73dcc5c7414069f6dd6c07e6bf2_sk
+    signedCert:
+      path: artifacts/channel/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/signcerts/Admin@org3.example.com-cert.pem
+
 
 #
 # List of orderers to send transaction and channel create/update requests to. For the time
@@ -194,6 +207,22 @@ peers:
     tlsCACerts:
       path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt
 
+  peer0.org3.example.com:
+    url: grpcs://localhost:9051
+    grpcOptions:
+      ssl-target-name-override: peer0.org3.example.com
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
+
+  peer1.org3.example.com:
+    url: grpcs://localhost:9056
+    eventUrl: grpcs://localhost:9058
+    grpcOptions:
+      ssl-target-name-override: peer1.org3.example.com
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/org3.example.com/peers/peer1.org3.example.com/tls/ca.crt
+
+
 #
 # Fabric-CA is a special kind of Certificate Authority provided by Hyperledger Fabric which allows
 # certificate management to be done via REST APIs. Application may choose to use a standard
@@ -228,3 +257,15 @@ certificateAuthorities:
         enrollSecret: adminpw
     # [Optional] The optional name of the CA.
     caName: ca-org2
+
+  ca-org3:
+    url: https://localhost:9054
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: artifacts/channel/crypto-config/peerOrganizations/org3.example.com/ca/ca.org3.example.com-cert.pem
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    # [Optional] The optional name of the CA.
+    caName: ca-org3
