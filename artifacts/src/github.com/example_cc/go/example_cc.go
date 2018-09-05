@@ -70,7 +70,8 @@ func (t *SimpleChaincode) hospitalRequest(APIstub shim.ChaincodeStubInterface, a
 	ledgerRequest, _ := json.Marshal(request)
 	APIstub.PutState(args[0], ledgerRequest)
 
-	return shim.Success(nil)
+	returnResponce,_ := APIstub.GetState(args[0])
+	return shim.Success(returnResponce)
 }
 
 
