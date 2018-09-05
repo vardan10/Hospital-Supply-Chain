@@ -183,14 +183,14 @@ curl -s -X GET \
 echo
 echo
 
-# echo "GET query Block by blockNumber"
-# echo
-# curl -s -X GET \
-#   "http://localhost:4000/channels/mychannel/blocks/1?peer=peer0.org1.example.com" \
-#   -H "authorization: Bearer $ORG1_TOKEN" \
-#   -H "content-type: application/json"
-# echo
-# echo
+echo "GET query Block by blockNumber"
+echo
+curl -s -X GET \
+  "http://localhost:4000/channels/mychannel/blocks/1?peer=peer0.org1.example.com" \
+  -H "authorization: Bearer $ORG1_TOKEN" \
+  -H "content-type: application/json"
+echo
+echo
 
 # echo "GET query Transaction by TransactionID"
 # echo
