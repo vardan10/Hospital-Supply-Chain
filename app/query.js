@@ -40,17 +40,7 @@ var queryChaincode = async function(peer, channelName, chaincodeName, args, fcn,
 			args: args
 		};
 		let response_payloads = await channel.queryByChaincode(request);
-		if (response_payloads) {
-			for (let i = 0; i < response_payloads.length; i++) {
-				logger.info(args[0]+' now has ' + response_payloads[i].toString('utf8') +
-					' after the move');
-			}
-			return args[0]+' now has ' + response_payloads[0].toString('utf8') +
-				' after the move';
-		} else {
-			logger.error('response_payloads is null');
-			return 'response_payloads is null';
-		}
+		logger.info(response_payloads[0].toString('utf8'))
 	} catch(error) {
 		logger.error('Failed to query due to error: ' + error.stack ? error.stack : error);
 		return error.toString();

@@ -52,6 +52,8 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	// Route to the appropriate handler function to interact with the ledger appropriately
 	if function == "hospitalRequest" {
 		return t.hospitalRequest(stub, args)
+	} else if function == "getHospitalRequest" {
+		return t.getHospitalRequest(stub,args)
 	} else if function == "volunteerRequest" {
 		return t.volunteerRequest(stub,args)
 	}
@@ -70,10 +72,18 @@ func (t *SimpleChaincode) hospitalRequest(APIstub shim.ChaincodeStubInterface, a
 	ledgerRequest, _ := json.Marshal(request)
 	APIstub.PutState(args[0], ledgerRequest)
 
+	return shim.Success(nil)
+}
+
+func (t *SimpleChaincode) getHospitalRequest(APIstub shim.ChaincodeStubInterface, args []string) pb.Response {
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
 	returnResponce,_ := APIstub.GetState(args[0])
 	return shim.Success(returnResponce)
 }
-
 
 func (t *SimpleChaincode) volunteerRequest(APIstub shim.ChaincodeStubInterface, args []string) pb.Response {
 
