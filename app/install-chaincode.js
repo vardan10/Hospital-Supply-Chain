@@ -53,6 +53,8 @@ var installChaincode = async function(peers, chaincodeName, chaincodePath,
 		// all good, if good they will also include signatures
 		// required to be committed
 		var all_good = true;
+		logger.info("============ Hello ==================")
+		logger.info(proposalResponses)
 		for (var i in proposalResponses) {
 			let one_good = false;
 			if (proposalResponses && proposalResponses[i].response &&
