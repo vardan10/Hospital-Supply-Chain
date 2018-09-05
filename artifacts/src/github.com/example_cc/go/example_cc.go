@@ -82,7 +82,9 @@ func (t *SimpleChaincode) getHospitalRequest(APIstub shim.ChaincodeStubInterface
 	}
 
 	returnResponce,_ := APIstub.GetState(args[0])
-	return shim.Success(returnResponce)
+
+	jsonResp := "{\"Name\":\"Vardan\",\"Amount\":\"Test\"}"
+	return shim.Success(jsonResp)
 }
 
 func (t *SimpleChaincode) volunteerRequest(APIstub shim.ChaincodeStubInterface, args []string) pb.Response {
