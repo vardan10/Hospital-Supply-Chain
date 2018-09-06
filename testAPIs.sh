@@ -84,10 +84,21 @@ ORG3_TOKEN=$(curl -s -X POST \
 echo $ORG3_TOKEN
 ORG2_TOKEN=$(echo $ORG3_TOKEN | jq ".token" | sed "s/\"//g")
 echo
-echo "ORG2 token is $ORG3_TOKEN"
+echo "ORG3 token is $ORG3_TOKEN"
 echo
 
-
+echo
+echo "POST request Login on Org3 ..."
+echo
+ORG3_TOKEN=$(curl -s -X POST \
+  http://localhost:4000/loginUsers \
+  -H "content-type: application/x-www-form-urlencoded" \
+  -d 'username=Jhon&orgName=Org3&')
+echo $ORG3_TOKEN
+ORG2_TOKEN=$(echo $ORG3_TOKEN | jq ".token" | sed "s/\"//g")
+echo
+echo "ORG3 token is $ORG3_TOKEN"
+echo
 
 
 
