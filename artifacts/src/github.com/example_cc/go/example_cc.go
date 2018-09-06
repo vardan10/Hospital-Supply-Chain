@@ -18,6 +18,8 @@ package main
 
 
 import (
+	"fmt"
+	"bytes"
 	"encoding/json"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
