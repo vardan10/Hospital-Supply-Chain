@@ -2,7 +2,7 @@
 
 * Register and enroll new users in Organization - **Org1**:
 
-`curl -s -X POST http://localhost:4000/users -H "content-type: application/x-www-form-urlencoded" -d 'username=Jim&orgName=Org1'`
+`curl -s -X POST http://10.53.18.86:4000/users -H "content-type: application/x-www-form-urlencoded" -d 'username=Jim&orgName=Org1'`
 
 **OUTPUT:**
 
@@ -21,7 +21,7 @@ Returns Token
 
 ```
 curl -s -X POST \
-  http://localhost:4000/channels/mychannel/chaincodes/mycc \
+  http://10.53.18.86:4000/channels/mychannel/chaincodes/mycc \
   -H "authorization: Bearer <put JSON Web Token here>" \
   -H "content-type: application/json" \
   -d '{
@@ -38,7 +38,7 @@ Returns Success
 
 ```
 curl -s -X POST \
-  http://localhost:4000/channels/mychannel/chaincodes/mycc \
+  http://10.53.18.86:4000/channels/mychannel/chaincodes/mycc \
   -H "authorization: Bearer <put JSON Web Token here>" \
   -H "content-type: application/json" \
   -d '{
@@ -55,7 +55,7 @@ Returns all request made by hospital
 
 ```
 curl -s -X POST \
-  http://localhost:4000/channels/mychannel/chaincodes/mycc \
+  http://10.53.18.86:4000/channels/mychannel/chaincodes/mycc \
   -H "authorization: Bearer <put JSON Web Token here>" \
   -H "content-type: application/json" \
   -d '{
@@ -72,7 +72,7 @@ Returns Success
 
 ```
 curl -s -X POST \
-  http://localhost:4000/channels/mychannel/chaincodes/mycc \
+  http://10.53.18.86:4000/channels/mychannel/chaincodes/mycc \
   -H "authorization: Bearer <put JSON Web Token here>" \
   -H "content-type: application/json" \
   -d '{
@@ -89,7 +89,7 @@ Returns all request made to Volunteer
 
 ```
 curl -s -X POST \
-  http://localhost:4000/channels/mychannel/chaincodes/mycc \
+  http://10.53.18.86:4000/channels/mychannel/chaincodes/mycc \
   -H "authorization: Bearer <put JSON Web Token here>" \
   -H "content-type: application/json" \
   -d '{
@@ -106,7 +106,7 @@ Returns Success
 
 ```
 curl -s -X POST \
-  http://localhost:4000/channels/mychannel/chaincodes/mycc \
+  http://10.53.18.86:4000/channels/mychannel/chaincodes/mycc \
   -H "authorization: Bearer <put JSON Web Token here>" \
   -H "content-type: application/json" \
   -d '{
@@ -123,7 +123,7 @@ Returns all request made to NGO
 
 ```
 curl -s -X POST \
-  http://localhost:4000/channels/mychannel/chaincodes/mycc \
+  http://10.53.18.86:4000/channels/mychannel/chaincodes/mycc \
   -H "authorization: Bearer <put JSON Web Token here>" \
   -H "content-type: application/json" \
   -d '{
