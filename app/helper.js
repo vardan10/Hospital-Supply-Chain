@@ -99,11 +99,17 @@ var getRegisteredUser = async function(username, userOrg, isJson) {
 
 			let secret = await caClient.register({
 				enrollmentID: username,
-				affiliation: userOrg.toLowerCase() + '.department1'
+				enrollmentSecret: 'Vardan'
 			}, adminUserObj);
 			logger.debug('Successfully got the secret for user %s',username);
 			user = await client.setUserContext({username:username, password:secret});
 			logger.debug('Successfully enrolled username %s  and setUserContext on the client object', username);
+		
+
+			user._enrollmentSecret = secret;
+			user = await client.setUserContext(user);
+
+			logger.debug(user.toString())
 		}
 		if(user && user.isEnrolled) {
 			if (isJson && isJson === true) {
@@ -135,6 +141,10 @@ var checkRegisteredUser = async function(username, userOrg, password, isJson) {
 		if (user && user.isEnrolled()) {
 			logger.info('Successfully loaded member from persistence');
 			
+			logger.info('============ Hello ============');
+			logger.info(user.toString());
+
+
 			if (isJson && isJson === true && user._enrollmentSecret == password) {
 				var response = {
 					success: true,
