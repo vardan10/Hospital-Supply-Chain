@@ -2,7 +2,7 @@
 
 * Register and enroll new users in Organization - **Org1**:
 
-`curl -s -X POST http://10.53.18.86:4000/users -H "content-type: application/x-www-form-urlencoded" -d 'username=Jim&orgName=Org1'`
+`curl -s -X POST http://10.53.18.86:4000/users -H "content-type: application/x-www-form-urlencoded" -d 'username=Jim1&orgName=Org1'`
 
 **OUTPUT:**
 
