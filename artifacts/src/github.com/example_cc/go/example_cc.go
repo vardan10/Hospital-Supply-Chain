@@ -83,7 +83,7 @@ func (t *SimpleChaincode) getHospitalRequest(APIstub shim.ChaincodeStubInterface
 
 	returnResponce,_ := APIstub.GetState(args[0])
 	
-	return shim.Success("Hello")
+	return shim.Success(nil)
 }
 
 func (t *SimpleChaincode) volunteerRequest(APIstub shim.ChaincodeStubInterface, args []string) pb.Response {
