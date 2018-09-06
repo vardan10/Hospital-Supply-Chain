@@ -1,8 +1,8 @@
-### Login Request
+### Register Request
 
 * Register and enroll new users in Organization - **Org1**:
 
-`curl -s -X POST http://10.53.18.86:4000/users -H "content-type: application/x-www-form-urlencoded" -d 'username=Jim1&orgName=Org1'`
+`curl -s -X POST http://10.53.18.86:4000/users -H "content-type: application/x-www-form-urlencoded" -d 'username=Jim&orgName=Org1&secret=enter'`
 
 **OUTPUT:**
 
@@ -15,6 +15,28 @@
 }
 ```
 Returns Token
+
+
+### Login Request
+
+* Register and enroll new users in Organization - **Org1**:
+
+`curl -s -X POST http://10.53.18.86:4000/loginUsers -H "content-type: application/x-www-form-urlencoded" -d 'username=Jim&orgName=Org1&secret=enter'`
+
+**OUTPUT:**
+
+```
+{
+  "success": true,
+  "secret": "RaxhMgevgJcm",
+  "message": "Jim enrolled Successfully",
+  "token": "<put JSON Web Token here>"
+}
+```
+Returns Token
+
+
+
 
 
 ### Invoke Hospital request

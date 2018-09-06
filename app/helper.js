@@ -71,7 +71,7 @@ async function getClientForOrg (userorg, username) {
 	return client;
 }
 
-var getRegisteredUser = async function(username, userOrg, isJson) {
+var getRegisteredUser = async function(username, userOrg, pass, isJson) {
 	try {
 		var client = await getClientForOrg(userOrg);
 		logger.debug('Successfully initialized the credential stores');
@@ -98,18 +98,14 @@ var getRegisteredUser = async function(username, userOrg, isJson) {
 			// }
 
 			let secret = await caClient.register({
-				enrollmentID: username,
-				enrollmentSecret: 'Vardan'
+				enrollmentID: username
 			}, adminUserObj);
 			logger.debug('Successfully got the secret for user %s',username);
 			user = await client.setUserContext({username:username, password:secret});
 			logger.debug('Successfully enrolled username %s  and setUserContext on the client object', username);
-		
-
-			user._enrollmentSecret = secret;
+			
+			user._enrollmentSecret = pass;
 			user = await client.setUserContext(user);
-
-			logger.debug(user.toString())
 		}
 		if(user && user.isEnrolled) {
 			if (isJson && isJson === true) {
@@ -140,10 +136,6 @@ var checkRegisteredUser = async function(username, userOrg, password, isJson) {
 		var user = await client.getUserContext(username, true);
 		if (user && user.isEnrolled()) {
 			logger.info('Successfully loaded member from persistence');
-			
-			logger.info('============ Hello ============');
-			logger.info(user.toString());
-
 
 			if (isJson && isJson === true && user._enrollmentSecret == password) {
 				var response = {
@@ -153,7 +145,6 @@ var checkRegisteredUser = async function(username, userOrg, password, isJson) {
 				};
 				return response;
 			}
-
 		} else {
 			throw new Error('User was not enrolled ');
 		}
