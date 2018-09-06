@@ -56,7 +56,7 @@ app.set('secret', 'thisismysecret');
 app.use(expressJWT({
 	secret: 'thisismysecret'
 }).unless({
-	path: ['/users']
+	path: ['/users','/loginUsers']
 }));
 app.use(bearerToken());
 app.use(function(req, res, next) {
@@ -143,7 +143,7 @@ app.post('/loginUsers', async function(req, res) {
 	var username = req.body.username;
 	var orgName = req.body.orgName;
 	var password = req.body.secret;
-	logger.debug('End point : /users');
+	logger.debug('End point : /loginUsers');
 	logger.debug('User name : ' + username);
 	logger.debug('Org name  : ' + orgName);
 	logger.debug('password  : ' + password);
