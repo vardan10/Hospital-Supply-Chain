@@ -87,17 +87,15 @@ var getRegisteredUser = async function(username, userOrg, isJson) {
 			let adminUserObj = await client.setUserContext({username: admins[0].username, password: admins[0].secret});
 			let caClient = client.getCertificateAuthority();
 
-
-			let affiliationService = caClient.newAffiliationService();
-			let registeredAffiliations = await affiliationService.getAll(adminUserObj);
-			if(!registeredAffiliations.result.affiliations.some(
-				x => x.name == userOrg.toLowerCase())){
-					let affiliation = 'org3.department1'; 
-					await affiliationService.create({
-									name: affiliation, 
-									force: true}, adminUserObj);
-			}
-
+			// let affiliationService = caClient.newAffiliationService();
+			// let registeredAffiliations = await affiliationService.getAll(adminUserObj);
+			// if(!registeredAffiliations.result.affiliations.some(
+			// 	x => x.name == userOrg.toLowerCase())){
+			// 		let affiliation = 'org3.department1'; 
+			// 		await affiliationService.create({
+			// 						name: affiliation, 
+			// 						force: true}, adminUserObj);
+			// }
 
 			let secret = await caClient.register({
 				enrollmentID: username,
