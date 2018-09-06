@@ -84,7 +84,7 @@ ORG3_TOKEN=$(curl -s -X POST \
   -H "content-type: application/x-www-form-urlencoded" \
   -d 'username=Jhon&orgName=Org3&secret=enter')
 echo $ORG3_TOKEN
-ORG2_TOKEN=$(echo $ORG3_TOKEN | jq ".token" | sed "s/\"//g")
+ORG3_TOKEN=$(echo $ORG3_TOKEN | jq ".token" | sed "s/\"//g")
 echo
 echo "ORG3 token is $ORG3_TOKEN"
 echo
