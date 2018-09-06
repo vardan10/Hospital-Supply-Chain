@@ -98,13 +98,14 @@ var getRegisteredUser = async function(username, userOrg, pass, isJson) {
 			// }
 
 			let secret = await caClient.register({
-				enrollmentID: username
+				enrollmentID: username,
+				enrollmentSecret: pass
 			}, adminUserObj);
 			logger.debug('Successfully got the secret for user %s',username);
 			user = await client.setUserContext({username:username, password:secret});
 			logger.debug('Successfully enrolled username %s  and setUserContext on the client object', username);
 			
-			user._enrollmentSecret = pass;
+			user._enrollmentSecret = secret;
 			user = await client.setUserContext(user);
 		}
 		if(user && user.isEnrolled) {
