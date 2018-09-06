@@ -50,18 +50,16 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	function, args := stub.GetFunctionAndParameters()
 
 	// Route to the appropriate handler function to interact with the ledger appropriately
-	if function == "hospitalRequest" {
-		return t.hospitalRequest(stub, args)
-	} else if function == "getHospitalRequest" {
-		return t.getHospitalRequest(stub,args)
-	} else if function == "volunteerRequest" {
-		return t.volunteerRequest(stub,args)
+	if function == "hospitalInvoke" {
+		return t.hospitalInvoke(stub, args)
+	} else if function == "hospitalQuery" {
+		return t.hospitalQuery(stub,args)
 	}
 
 	return shim.Error("Invalid Smart Contract function name.")
 }
 
-func (t *SimpleChaincode) hospitalRequest(APIstub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (t *SimpleChaincode) hospitalInvoke(APIstub shim.ChaincodeStubInterface, args []string) pb.Response {
 
 	if len(args) != 4 {
 		return shim.Error("Incorrect number of arguments. Expecting 1")
@@ -75,24 +73,51 @@ func (t *SimpleChaincode) hospitalRequest(APIstub shim.ChaincodeStubInterface, a
 	return shim.Success(nil)
 }
 
-func (t *SimpleChaincode) getHospitalRequest(APIstub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (t *SimpleChaincode) hospitalQuery(APIstub shim.ChaincodeStubInterface, args []string) pb.Response {
 
-	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
 
-	returnResponce,_ := APIstub.GetState(args[0])
-	
-	return shim.Success(nil)
-}
+	startKey := args[0]
+	endKey := args[1]
 
-func (t *SimpleChaincode) volunteerRequest(APIstub shim.ChaincodeStubInterface, args []string) pb.Response {
-
-	if len(args) != 3 {
-		return shim.Error("Incorrect number of arguments. Expecting 3")
+	resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
+	if err != nil {
+		return shim.Error(err.Error())
 	}
+	defer resultsIterator.Close()
 
-	return shim.Success(nil)
+	// buffer is a JSON array containing QueryResults
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
+
+	bArrayMemberAlreadyWritten := false
+	for resultsIterator.HasNext() {
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+		// Add a comma before array members, suppress it for the first array member
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+		buffer.WriteString("{\"Key\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(queryResponse.Key)
+		buffer.WriteString("\"")
+
+		buffer.WriteString(", \"Record\":")
+		// Record is a JSON object, so we write as-is
+		buffer.WriteString(string(queryResponse.Value))
+		buffer.WriteString("}")
+		bArrayMemberAlreadyWritten = true
+	}
+	buffer.WriteString("]")
+
+	fmt.Printf("- queryAllCars:\n%s\n", buffer.String())
+
+	return shim.Success(buffer.Bytes())
 }
 
 
