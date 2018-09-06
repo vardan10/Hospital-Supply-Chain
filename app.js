@@ -61,7 +61,7 @@ app.use(expressJWT({
 app.use(bearerToken());
 app.use(function(req, res, next) {
 	logger.debug(' ------>>>>>> new request for %s',req.originalUrl);
-	if (req.originalUrl.indexOf('/users') >= 0) {
+	if (req.originalUrl.indexOf('/users') >= 0 || req.originalUrl.indexOf('/loginUsers') >= 0) {
 		return next();
 	}
 
