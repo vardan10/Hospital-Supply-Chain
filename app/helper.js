@@ -168,3 +168,4 @@ exports.getClientForOrg = getClientForOrg;
 exports.getLogger = getLogger;
 exports.setupChaincodeDeploy = setupChaincodeDeploy;
 exports.getRegisteredUser = getRegisteredUser;
+exports.checkRegisteredUser = checkRegisteredUser;
