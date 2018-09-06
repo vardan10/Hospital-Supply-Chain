@@ -137,6 +137,48 @@ app.post('/users', async function(req, res) {
 	}
 
 });
+
+// Login user
+app.post('/loginUsers', async function(req, res) {
+	var username = req.body.username;
+	var orgName = req.body.orgName;
+	var password = req.body.secret;
+	logger.debug('End point : /users');
+	logger.debug('User name : ' + username);
+	logger.debug('Org name  : ' + orgName);
+	logger.debug('password  : ' + password);
+	if (!username) {
+		res.json(getErrorMessage('\'username\''));
+		return;
+	}
+	if (!orgName) {
+		res.json(getErrorMessage('\'orgName\''));
+		return;
+	}
+	if (!password) {
+		res.json(getErrorMessage('\'password\''));
+		return;
+	}
+	var token = jwt.sign({
+		exp: Math.floor(Date.now() / 1000) + parseInt(hfc.getConfigSetting('jwt_expiretime')),
+		username: username,
+		orgName: orgName
+	}, app.get('secret'));
+	let response = await helper.getRegisteredUser(username, orgName, password, true);
+	logger.debug('-- returned from registering the username %s for organization %s',username,orgName);
+	if (response && typeof response !== 'string') {
+		logger.debug('Successfully registered the username %s for organization %s',username,orgName);
+		response.token = token;
+		res.json(response);
+	} else {
+		logger.debug('Failed to register the username %s for organization %s with::%s',username,orgName,response);
+		res.json({success: false, message: response});
+	}
+
+});
+
+
+
 // Create Channel
 app.post('/channels', async function(req, res) {
 	logger.info('<<<<<<<<<<<<<<<<< C R E A T E  C H A N N E L >>>>>>>>>>>>>>>>>');

@@ -75,6 +75,23 @@ echo
 echo "ORG2 token is $ORG2_TOKEN"
 echo
 echo
+echo "POST request Enroll on Org3 ..."
+echo
+ORG3_TOKEN=$(curl -s -X POST \
+  http://localhost:4000/users \
+  -H "content-type: application/x-www-form-urlencoded" \
+  -d 'username=Jhon&orgName=Org3')
+echo $ORG3_TOKEN
+ORG2_TOKEN=$(echo $ORG3_TOKEN | jq ".token" | sed "s/\"//g")
+echo
+echo "ORG2 token is $ORG3_TOKEN"
+echo
+
+
+
+
+
+echo
 echo "POST request Create channel  ..."
 echo
 curl -s -X POST \
@@ -183,14 +200,14 @@ curl -s -X GET \
 echo
 echo
 
-echo "GET query Block by blockNumber"
-echo
-curl -s -X GET \
-  "http://localhost:4000/channels/mychannel/blocks/1?peer=peer0.org1.example.com" \
-  -H "authorization: Bearer $ORG1_TOKEN" \
-  -H "content-type: application/json"
-echo
-echo
+# echo "GET query Block by blockNumber"
+# echo
+# curl -s -X GET \
+#   "http://localhost:4000/channels/mychannel/blocks/1?peer=peer0.org1.example.com" \
+#   -H "authorization: Bearer $ORG1_TOKEN" \
+#   -H "content-type: application/json"
+# echo
+# echo
 
 # echo "GET query Transaction by TransactionID"
 # echo

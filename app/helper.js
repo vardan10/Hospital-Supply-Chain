@@ -114,6 +114,35 @@ var getRegisteredUser = async function(username, userOrg, isJson) {
 };
 
 
+var checkRegisteredUser = async function(username, userOrg, password, isJson) {
+	try {
+		var client = await getClientForOrg(userOrg);
+		logger.debug('Successfully initialized the credential stores');
+			// client can now act as an agent for organization Org1
+			// first check to see if the user is already enrolled
+		var user = await client.getUserContext(username, true);
+		if (user && user.isEnrolled()) {
+			logger.info('Successfully loaded member from persistence');
+			
+			if (isJson && isJson === true && user._enrollmentSecret == password) {
+				var response = {
+					success: true,
+					secret: user._enrollmentSecret,
+					message: username + ' Logged in Successfully',
+				};
+				return response;
+			}
+
+		} else {
+			throw new Error('User was not enrolled ');
+		}
+	} catch(error) {
+		logger.error('Failed to get registered user: %s with error: %s', username, error.toString());
+		return 'failed '+error.toString();
+	}
+
+};
+
 var setupChaincodeDeploy = function() {
 	process.env.GOPATH = path.join(__dirname, hfc.getConfigSetting('CC_SRC_PATH'));
 };
