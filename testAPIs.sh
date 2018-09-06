@@ -76,34 +76,18 @@ echo "ORG2 token is $ORG2_TOKEN"
 echo
 
 
-
-
-# echo
-# echo "POST request Enroll on Org3 ..."
-# echo
-# ORG3_TOKEN=$(curl -s -X POST \
-#   http://localhost:4000/users \
-#   -H "content-type: application/x-www-form-urlencoded" \
-#   -d 'username=Jhon&orgName=Org3')
-# echo $ORG3_TOKEN
-# ORG2_TOKEN=$(echo $ORG3_TOKEN | jq ".token" | sed "s/\"//g")
-# echo
-# echo "ORG3 token is $ORG3_TOKEN"
-# echo
-
-# echo
-# echo "POST request Login on Org3 ..."
-# echo
-# ORG3_TOKEN=$(curl -s -X POST \
-#   http://localhost:4000/loginUsers \
-#   -H "content-type: application/x-www-form-urlencoded" \
-#   -d 'username=Jhon&orgName=Org3&')
-# echo $ORG3_TOKEN
-# ORG2_TOKEN=$(echo $ORG3_TOKEN | jq ".token" | sed "s/\"//g")
-# echo
-# echo "ORG3 token is $ORG3_TOKEN"
-# echo
-
+echo
+echo "POST request Enroll on Org3 ..."
+echo
+ORG3_TOKEN=$(curl -s -X POST \
+  http://localhost:4000/users \
+  -H "content-type: application/x-www-form-urlencoded" \
+  -d 'username=Jhon&orgName=Org3')
+echo $ORG3_TOKEN
+ORG2_TOKEN=$(echo $ORG3_TOKEN | jq ".token" | sed "s/\"//g")
+echo
+echo "ORG3 token is $ORG3_TOKEN"
+echo
 
 
 echo
@@ -199,7 +183,7 @@ TRX_ID=$(curl -s -X POST \
   -H "content-type: application/json" \
   -d '{
 	"peers": ["peer0.org1.example.com","peer1.org1.example.com"],
-	"fcn":"hospitalRequest",
+	"fcn":"hospitalInvoke",
 	"args":["REQ1","test","siringe","vardan"]
 }')
 echo "Transaction ID is $TRX_ID"
@@ -209,79 +193,8 @@ echo
 echo "GET query chaincode on peer1 of Org1"
 echo
 curl -s -X GET \
-  "http://localhost:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=getHospitalRequest&args=%5B%22REQ1%22%5D" \
+  "http://localhost:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=hospitalInvoke&args=%5B%27REQ1%27%2C%27REQ2%27%5D" \
   -H "authorization: Bearer $ORG1_TOKEN" \
   -H "content-type: application/json"
 echo
 echo
-
-# echo "GET query Block by blockNumber"
-# echo
-# curl -s -X GET \
-#   "http://localhost:4000/channels/mychannel/blocks/1?peer=peer0.org1.example.com" \
-#   -H "authorization: Bearer $ORG1_TOKEN" \
-#   -H "content-type: application/json"
-# echo
-# echo
-
-# echo "GET query Transaction by TransactionID"
-# echo
-# curl -s -X GET http://localhost:4000/channels/mychannel/transactions/$TRX_ID?peer=peer0.org1.example.com \
-#   -H "authorization: Bearer $ORG1_TOKEN" \
-#   -H "content-type: application/json"
-# echo
-# echo
-
-# ############################################################################
-# ### TODO: What to pass to fetch the Block information
-# ############################################################################
-# #echo "GET query Block by Hash"
-# #echo
-# #hash=????
-# #curl -s -X GET \
-# #  "http://localhost:4000/channels/mychannel/blocks?hash=$hash&peer=peer1" \
-# #  -H "authorization: Bearer $ORG1_TOKEN" \
-# #  -H "cache-control: no-cache" \
-# #  -H "content-type: application/json" \
-# #  -H "x-access-token: $ORG1_TOKEN"
-# #echo
-# #echo
-
-# echo "GET query ChainInfo"
-# echo
-# curl -s -X GET \
-#   "http://localhost:4000/channels/mychannel?peer=peer0.org1.example.com" \
-#   -H "authorization: Bearer $ORG1_TOKEN" \
-#   -H "content-type: application/json"
-# echo
-# echo
-
-# echo "GET query Installed chaincodes"
-# echo
-# curl -s -X GET \
-#   "http://localhost:4000/chaincodes?peer=peer0.org1.example.com" \
-#   -H "authorization: Bearer $ORG1_TOKEN" \
-#   -H "content-type: application/json"
-# echo
-# echo
-
-# echo "GET query Instantiated chaincodes"
-# echo
-# curl -s -X GET \
-#   "http://localhost:4000/channels/mychannel/chaincodes?peer=peer0.org1.example.com" \
-#   -H "authorization: Bearer $ORG1_TOKEN" \
-#   -H "content-type: application/json"
-# echo
-# echo
-
-# echo "GET query Channels"
-# echo
-# curl -s -X GET \
-#   "http://localhost:4000/channels?peer=peer0.org1.example.com" \
-#   -H "authorization: Bearer $ORG1_TOKEN" \
-#   -H "content-type: application/json"
-# echo
-# echo
-
-
-# echo "Total execution time : $(($(date +%s)-starttime)) secs ..."
