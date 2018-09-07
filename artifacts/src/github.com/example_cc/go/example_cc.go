@@ -52,8 +52,14 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	// Handle different functions
 	if function == "hospitalInvoke" {
 		return t.hospitalInvoke(stub, args)
-	} else if function == "hospitalQuery" {
-		return t.hospitalQuery(stub,args)
+	} else if function == "query" {
+		return t.query(stub,args)
+	} else if function == "ngoInvoke" {
+		return t.ngoInvoke(stub,args)
+	} else if function == "volunteerInvoke" {
+		return t.volunteerInvoke(stub,args)
+	} else if function == "hospitalSuccess" {
+		return t.hospitalSuccess(stub,args)
 	}
 
 	fmt.Println("invoke did not find func: " + function) //error
@@ -67,7 +73,7 @@ func (t *SimpleChaincode) hospitalInvoke(stub shim.ChaincodeStubInterface, args 
 	var err error
 
 	//   0       	1       		2     				3
-	// "REQ1", "HospitalName", "AssetRequested", "VolunteerName"
+	// "Key", "HospitalName", "AssetRequested", "VolunteerName"
 	if len(args) != 4 {
 		return shim.Error("Incorrect number of arguments. Expecting 4")
 	}
@@ -103,9 +109,9 @@ func (t *SimpleChaincode) hospitalInvoke(stub shim.ChaincodeStubInterface, args 
 }
 
 // ================================================
-// hospitalQuery - Get all Hospital request records
+// query - Get all records
 // ================================================
-func (t *SimpleChaincode) hospitalQuery(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (t *SimpleChaincode) query(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
 	if len(args) < 2 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
@@ -148,4 +154,97 @@ func (t *SimpleChaincode) hospitalQuery(stub shim.ChaincodeStubInterface, args [
 	buffer.WriteString("]")
 
 	return shim.Success(buffer.Bytes())
+}
+
+func (t *SimpleChaincode) ngoInvoke(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+
+	//   0       	1
+	// "key", "VoluenteerName"
+	if len(args) < 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	requestAsBytes, err := stub.GetState(args[0])
+	if err != nil {
+		return shim.Error("Failed to get marble:" + err.Error())
+	} else if requestAsBytes == nil {
+		return shim.Error("Marble does not exist")
+	}
+
+	requestToTransfer := marble{}
+	err = json.Unmarshal(requestAsBytes, &requestToTransfer) //unmarshal it aka JSON.parse()
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	requestToTransfer.VolunteerName = args[1] //add Volunteer Name
+	requestToTransfer.NgoSuccess = true
+
+	marbleJSONasBytes, _ := json.Marshal(requestToTransfer)
+	err = stub.PutState(args[0], marbleJSONasBytes) //rewrite the marble
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success(nil)
+}
+
+func (t *SimpleChaincode) volunteerInvoke(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	
+	//   0
+	// "key"
+	if len(args) < 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	requestAsBytes, err := stub.GetState(args[0])
+	if err != nil {
+		return shim.Error("Failed to get marble:" + err.Error())
+	} else if requestAsBytes == nil {
+		return shim.Error("Marble does not exist")
+	}
+
+	requestToTransfer := marble{}
+	err = json.Unmarshal(requestAsBytes, &requestToTransfer) //unmarshal it aka JSON.parse()
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	requestToTransfer.VolunteerSuccess = true
+
+	marbleJSONasBytes, _ := json.Marshal(requestToTransfer)
+	err = stub.PutState(args[0], marbleJSONasBytes) //rewrite the marble
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success(nil)
+}
+
+func (t *SimpleChaincode) hospitalSuccess(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	//   0
+	// "key"
+	if len(args) < 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	requestAsBytes, err := stub.GetState(args[0])
+	if err != nil {
+		return shim.Error("Failed to get marble:" + err.Error())
+	} else if requestAsBytes == nil {
+		return shim.Error("Marble does not exist")
+	}
+
+	requestToTransfer := marble{}
+	err = json.Unmarshal(requestAsBytes, &requestToTransfer) //unmarshal it aka JSON.parse()
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	requestToTransfer.HospitalSuccess = true
+
+	marbleJSONasBytes, _ := json.Marshal(requestToTransfer)
+	err = stub.PutState(args[0], marbleJSONasBytes) //rewrite the marble
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+
+	return shim.Success(nil)
 }
