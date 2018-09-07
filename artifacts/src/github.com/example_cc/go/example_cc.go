@@ -14,11 +14,10 @@ type SimpleChaincode struct {
 }
 
 type marble struct {
-	Name       			string `json:"name"`			//the fieldtags are needed to keep case from bouncing around
 	HospitalName		string `json:"hospitalName"`
 	AssetRequested      string `json:"assetRequested"`
 
-	NgoName  			string `json:"owner"`
+	NgoName  			string `json:"ngoName"`
 	NgoSuccess 			bool `json:"ngoSuccess"`
 	
 	VolunteerName 		string `json:"volunteerName"`
@@ -192,8 +191,8 @@ func (t *SimpleChaincode) volunteerInvoke(stub shim.ChaincodeStubInterface, args
 	
 	//   0
 	// "key"
-	if len(args) < 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+	if len(args) < 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
 
 	requestAsBytes, err := stub.GetState(args[0])
@@ -222,8 +221,8 @@ func (t *SimpleChaincode) volunteerInvoke(stub shim.ChaincodeStubInterface, args
 func (t *SimpleChaincode) hospitalSuccess(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	//   0
 	// "key"
-	if len(args) < 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+	if len(args) < 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
 	}
 
 	requestAsBytes, err := stub.GetState(args[0])
