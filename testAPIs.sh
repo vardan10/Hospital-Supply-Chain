@@ -128,17 +128,19 @@ curl -s -X POST \
 echo
 echo
 
-# echo "POST request Join channel on Org3"
-# echo
-# curl -s -X POST \
-#   http://localhost:4000/channels/mychannel/peers \
-#   -H "authorization: Bearer $ORG3_TOKEN" \
-#   -H "content-type: application/json" \
-#   -d '{
-# 	"peers": ["peer0.org3.example.com","peer1.org3.example.com"]
-# }'
-# echo
-# echo
+echo "POST request Join channel on Org3"
+echo
+curl -s -X POST \
+  http://localhost:4000/channels/mychannel/peers \
+  -H "authorization: Bearer $ORG3_TOKEN" \
+  -H "content-type: application/json" \
+  -d '{
+	"peers": ["peer0.org3.example.com","peer1.org3.example.com"]
+}'
+echo
+echo
+
+sleep 5
 
 echo "POST Install chaincode on Org1"
 echo
@@ -172,21 +174,23 @@ curl -s -X POST \
 echo
 echo
 
-# echo "POST Install chaincode on Org3"
-# echo
-# curl -s -X POST \
-#   http://localhost:4000/chaincodes \
-#   -H "authorization: Bearer $ORG3_TOKEN" \
-#   -H "content-type: application/json" \
-#   -d "{
-# 	\"peers\": [\"peer0.org3.example.com\",\"peer1.org3.example.com\"],
-# 	\"chaincodeName\":\"mycc\",
-# 	\"chaincodePath\":\"$CC_SRC_PATH\",
-# 	\"chaincodeType\": \"$LANGUAGE\",
-# 	\"chaincodeVersion\":\"v11\"
-# }"
-# echo
-# echo
+echo "POST Install chaincode on Org3"
+echo
+curl -s -X POST \
+  http://localhost:4000/chaincodes \
+  -H "authorization: Bearer $ORG3_TOKEN" \
+  -H "content-type: application/json" \
+  -d "{
+	\"peers\": [\"peer0.org3.example.com\",\"peer1.org3.example.com\"],
+	\"chaincodeName\":\"mycc\",
+	\"chaincodePath\":\"$CC_SRC_PATH\",
+	\"chaincodeType\": \"$LANGUAGE\",
+	\"chaincodeVersion\":\"v11\"
+}"
+echo
+echo
+
+sleep 5
 
 echo "POST instantiate chaincode on peer1 of Org1"
 echo
@@ -226,6 +230,8 @@ curl -s -X GET \
   -H "content-type: application/json"
 echo
 echo
+
+sleep 5
 
 echo "POST invoke chaincode on peers of Org1"
 echo

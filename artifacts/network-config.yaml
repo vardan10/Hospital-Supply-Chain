@@ -86,6 +86,18 @@ channels:
         ledgerQuery: true
         eventSource: false
 
+      peer0.org3.example.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      peer1.org3.example.com:
+        endorsingPeer: false
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: false
+
     # [Optional]. what chaincodes are expected to exist on this channel? The application can use
     # this information to validate that the target peers are in the expected state by comparing
     # this list with the query results of getInstalledChaincodes() and getInstantiatedChaincodes()
