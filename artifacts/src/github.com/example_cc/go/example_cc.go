@@ -17,7 +17,14 @@ type marble struct {
 	Name       			string `json:"name"`			//the fieldtags are needed to keep case from bouncing around
 	HospitalName		string `json:"hospitalName"`
 	AssetRequested      string `json:"assetRequested"`
-	VolunteerName		string `json:"volunteerName"`
+
+	NgoName  			string `json:"owner"`
+	NgoSuccess 			bool `json:"ngoSuccess"`
+	
+	VolunteerName 		string `json:"volunteerName"`
+	VolunteerSuccess 	bool `json:"volunteerSuccess"`
+
+	HospitalSuccess 	bool `json:"hospitalSuccess"`
 }
 
 // ===================================================================================
@@ -80,18 +87,14 @@ func (t *SimpleChaincode) hospitalInvoke(stub shim.ChaincodeStubInterface, args 
 		return shim.Error("4th argument must be a non-empty string")
 	}
 
-	Requestkey := args[0]
-	hName := args[1]
-	asset := args[2]
-	vName  := args[3]
+	request := marble{HospitalName: args[1], AssetRequested: args[2], NgoName: args[3]}
 
-	request := &marble{Requestkey, hName, asset, vName}
 	requestJSONasBytes, err := json.Marshal(request)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 
-	err = stub.PutState(Requestkey, requestJSONasBytes)
+	err = stub.PutState(args[0], requestJSONasBytes)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
