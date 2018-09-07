@@ -151,7 +151,7 @@ curl -s -X POST \
 	\"chaincodeName\":\"mycc\",
 	\"chaincodePath\":\"$CC_SRC_PATH\",
 	\"chaincodeType\": \"$LANGUAGE\",
-	\"chaincodeVersion\":\"v1\"
+	\"chaincodeVersion\":\"v7\"
 }"
 echo
 echo
@@ -167,7 +167,7 @@ curl -s -X POST \
 	\"chaincodeName\":\"mycc\",
 	\"chaincodePath\":\"$CC_SRC_PATH\",
 	\"chaincodeType\": \"$LANGUAGE\",
-	\"chaincodeVersion\":\"v1\"
+	\"chaincodeVersion\":\"v7\"
 }"
 echo
 echo
@@ -183,7 +183,7 @@ echo
 # 	\"chaincodeName\":\"mycc\",
 # 	\"chaincodePath\":\"$CC_SRC_PATH\",
 # 	\"chaincodeType\": \"$LANGUAGE\",
-# 	\"chaincodeVersion\":\"v1\"
+# 	\"chaincodeVersion\":\"v7\"
 # }"
 # echo
 # echo
@@ -196,7 +196,7 @@ curl -s -X POST \
   -H "content-type: application/json" \
   -d "{
 	\"chaincodeName\":\"mycc\",
-	\"chaincodeVersion\":\"v1\",
+	\"chaincodeVersion\":\"v7\",
 	\"chaincodeType\": \"$LANGUAGE\",
 	\"args\":[\"a\",\"100\",\"b\",\"200\"]
 }"
@@ -212,7 +212,7 @@ TRX_ID=$(curl -s -X POST \
   -d '{
 	"peers": ["peer0.org1.example.com","peer1.org1.example.com"],
 	"fcn":"hospitalInvoke",
-	"args":["REQ1","test","siringe","vardan"]
+	"args":["REQ1","test","siringe","120"]
 }')
 echo "Transaction ID is $TRX_ID"
 echo
@@ -221,7 +221,7 @@ echo
 echo "GET query chaincode on peer1 of Org1"
 echo
 curl -s -X GET \
-  "http://localhost:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=hospitalInvoke&args=%5B%27REQ1%27%2C%27REQ2%27%5D" \
+  "http://localhost:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=hospitalQuery&args=%5B%27REQ1%27%5D" \
   -H "authorization: Bearer $ORG1_TOKEN" \
   -H "content-type: application/json"
 echo
