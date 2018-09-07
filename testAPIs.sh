@@ -151,7 +151,7 @@ curl -s -X POST \
 	\"chaincodeName\":\"mycc\",
 	\"chaincodePath\":\"$CC_SRC_PATH\",
 	\"chaincodeType\": \"$LANGUAGE\",
-	\"chaincodeVersion\":\"v9\"
+	\"chaincodeVersion\":\"v10\"
 }"
 echo
 echo
@@ -167,7 +167,7 @@ curl -s -X POST \
 	\"chaincodeName\":\"mycc\",
 	\"chaincodePath\":\"$CC_SRC_PATH\",
 	\"chaincodeType\": \"$LANGUAGE\",
-	\"chaincodeVersion\":\"v9\"
+	\"chaincodeVersion\":\"v10\"
 }"
 echo
 echo
@@ -183,7 +183,7 @@ echo
 # 	\"chaincodeName\":\"mycc\",
 # 	\"chaincodePath\":\"$CC_SRC_PATH\",
 # 	\"chaincodeType\": \"$LANGUAGE\",
-# 	\"chaincodeVersion\":\"v9\"
+# 	\"chaincodeVersion\":\"v10\"
 # }"
 # echo
 # echo
@@ -196,7 +196,7 @@ curl -s -X POST \
   -H "content-type: application/json" \
   -d "{
 	\"chaincodeName\":\"mycc\",
-	\"chaincodeVersion\":\"v9\",
+	\"chaincodeVersion\":\"v10\",
 	\"chaincodeType\": \"$LANGUAGE\",
 	\"args\":[\"a\",\"100\",\"b\",\"200\"]
 }"
