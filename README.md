@@ -1,7 +1,7 @@
 # Hospital-NGO-Volunteer Supply Chain
-ORG1 - Hospital 1
-ORG2 - NGO 1
-ORG3 - Volunteers
+ORG1 - Hospital 1 <br />
+ORG2 - NGO 1 <br />
+ORG3 - Volunteers <br />
 
 ### Register Request
 
