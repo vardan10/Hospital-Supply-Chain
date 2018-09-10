@@ -69,10 +69,10 @@ channels:
         eventSource: true
 
       peer1.org1.example.com:
-        endorsingPeer: false
+        endorsingPeer: true
         chaincodeQuery: true
         ledgerQuery: true
-        eventSource: false
+        eventSource: true
 
       peer0.org2.example.com:
         endorsingPeer: true
@@ -81,10 +81,22 @@ channels:
         eventSource: true
 
       peer1.org2.example.com:
-        endorsingPeer: false
+        endorsingPeer: true
         chaincodeQuery: true
         ledgerQuery: true
-        eventSource: false
+        eventSource: true
+
+      peer0.org3.example.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      peer1.org3.example.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
 
     # [Optional]. what chaincodes are expected to exist on this channel? The application can use
     # this information to validate that the target peers are in the expected state by comparing

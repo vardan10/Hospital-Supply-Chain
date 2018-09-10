@@ -57,6 +57,8 @@ var invokeChaincode = async function(peerNames, channelName, chaincodeName, fcn,
 		var proposalResponses = results[0];
 		var proposal = results[1];
 
+		logger.debug(results)
+
 		// lets have a look at the responses to see if they are
 		// all good, if good they will also include signatures
 		// required to be committed
@@ -68,7 +70,7 @@ var invokeChaincode = async function(peerNames, channelName, chaincodeName, fcn,
 				one_good = true;
 				logger.info('invoke chaincode proposal was good');
 			} else {
-				logger.error('invoke chaincode proposal was bad');
+				logger.error('invoke chaincode proposal was bad' + proposalResponses[i]);
 			}
 			all_good = all_good & one_good;
 		}
