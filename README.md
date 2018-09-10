@@ -53,7 +53,7 @@ curl -s -X POST \
   -H "authorization: Bearer <put JSON Web Token here>" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["peer0.org1.example.com","peer1.org1.example.com"],
+	"peers": ["peer0.org1.example.com"],
 	"fcn":"hospitalInvoke",
 	"args":["REQ1","test","syringe","Volunteer1"]
 }'
@@ -82,7 +82,7 @@ curl -s -X POST \
   -H "authorization: Bearer <put JSON Web Token here>" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["peer0.org3.example.com","peer1.org3.example.com"],
+	"peers": ["peer0.org3.example.com"],
 	"fcn":"ngoInvoke",
 	"args":["REQ1","volunteer_NAME"]
 }'
@@ -111,7 +111,7 @@ curl -s -X POST \
   -H "authorization: Bearer <put JSON Web Token here>" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["peer0.org2.example.com","peer1.org2.example.com"],
+	"peers": ["peer0.org2.example.com"],
 	"fcn":"volunteerInvoke",
 	"args":["REQ1"]
 }'
@@ -139,7 +139,7 @@ curl -s -X POST \
   -H "authorization: Bearer $ORG1_TOKEN" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["peer0.org1.example.com","peer1.org1.example.com"],
+	"peers": ["peer0.org1.example.com"],
 	"fcn":"hospitalSuccess",
 	"args":["REQ1"]
 }'
