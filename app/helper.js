@@ -99,6 +99,7 @@ var getRegisteredUser = async function(username, userOrg, pass, isJson) {
 
 			let secret = await caClient.register({
 				enrollmentID: username,
+				affiliation: 'org1.department1',
 				enrollmentSecret: pass
 			}, adminUserObj);
 			logger.debug('Successfully got the secret for user %s',username);
