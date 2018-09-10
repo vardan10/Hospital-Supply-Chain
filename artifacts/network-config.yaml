@@ -68,31 +68,13 @@ channels:
         # Default: true
         eventSource: true
 
-      peer1.org1.example.com:
-        endorsingPeer: true
-        chaincodeQuery: true
-        ledgerQuery: true
-        eventSource: true
-
       peer0.org2.example.com:
         endorsingPeer: true
         chaincodeQuery: true
         ledgerQuery: true
         eventSource: true
 
-      peer1.org2.example.com:
-        endorsingPeer: true
-        chaincodeQuery: true
-        ledgerQuery: true
-        eventSource: true
-
       peer0.org3.example.com:
-        endorsingPeer: true
-        chaincodeQuery: true
-        ledgerQuery: true
-        eventSource: true
-
-      peer1.org3.example.com:
         endorsingPeer: true
         chaincodeQuery: true
         ledgerQuery: true
@@ -114,7 +96,6 @@ organizations:
 
     peers:
       - peer0.org1.example.com
-      - peer1.org1.example.com
 
     # [Optional]. Certificate Authorities issue certificates for identification purposes in a Fabric based
     # network. Typically certificates provisioning is done in a separate process outside of the
@@ -145,7 +126,6 @@ organizations:
     mspid: Org2MSP
     peers:
       - peer0.org2.example.com
-      - peer1.org2.example.com
     certificateAuthorities:
       - ca-org2
     adminPrivateKey:
@@ -157,7 +137,6 @@ organizations:
     mspid: Org3MSP
     peers:
       - peer0.org3.example.com
-      - peer1.org3.example.com
     certificateAuthorities:
       - ca-org3
     adminPrivateKey:
@@ -197,13 +176,6 @@ peers:
     tlsCACerts:
       path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 
-  peer1.org1.example.com:
-    url: grpcs://localhost:7056
-    grpcOptions:
-      ssl-target-name-override: peer1.org1.example.com
-    tlsCACerts:
-      path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt
-
   peer0.org2.example.com:
     url: grpcs://localhost:8051
     grpcOptions:
@@ -211,28 +183,12 @@ peers:
     tlsCACerts:
       path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
 
-  peer1.org2.example.com:
-    url: grpcs://localhost:8056
-    eventUrl: grpcs://localhost:8058
-    grpcOptions:
-      ssl-target-name-override: peer1.org2.example.com
-    tlsCACerts:
-      path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt
-
   peer0.org3.example.com:
     url: grpcs://localhost:9051
     grpcOptions:
       ssl-target-name-override: peer0.org3.example.com
     tlsCACerts:
       path: artifacts/channel/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
-
-  peer1.org3.example.com:
-    url: grpcs://localhost:9056
-    eventUrl: grpcs://localhost:9058
-    grpcOptions:
-      ssl-target-name-override: peer1.org3.example.com
-    tlsCACerts:
-      path: artifacts/channel/crypto-config/peerOrganizations/org3.example.com/peers/peer1.org3.example.com/tls/ca.crt
 
 
 #

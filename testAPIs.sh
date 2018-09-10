@@ -112,7 +112,7 @@ curl -s -X POST \
   -H "authorization: Bearer $ORG1_TOKEN" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["peer0.org1.example.com","peer1.org1.example.com"]
+	"peers": ["peer0.org1.example.com"]
 }'
 echo
 echo
@@ -124,7 +124,7 @@ curl -s -X POST \
   -H "authorization: Bearer $ORG2_TOKEN" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["peer0.org2.example.com","peer1.org2.example.com"]
+	"peers": ["peer0.org2.example.com"]
 }'
 echo
 echo
@@ -136,7 +136,7 @@ curl -s -X POST \
   -H "authorization: Bearer $ORG3_TOKEN" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["peer0.org3.example.com","peer1.org3.example.com"]
+	"peers": ["peer0.org3.example.com"]
 }'
 echo
 echo
@@ -148,7 +148,7 @@ curl -s -X POST \
   -H "authorization: Bearer $ORG1_TOKEN" \
   -H "content-type: application/json" \
   -d "{
-	\"peers\": [\"peer0.org1.example.com\",\"peer1.org1.example.com\"],
+	\"peers\": [\"peer0.org1.example.com\"],
 	\"chaincodeName\":\"mycc\",
 	\"chaincodePath\":\"$CC_SRC_PATH\",
 	\"chaincodeType\": \"$LANGUAGE\",
@@ -164,7 +164,7 @@ curl -s -X POST \
   -H "authorization: Bearer $ORG2_TOKEN" \
   -H "content-type: application/json" \
   -d "{
-	\"peers\": [\"peer0.org2.example.com\",\"peer1.org2.example.com\"],
+	\"peers\": [\"peer0.org2.example.com\"],
 	\"chaincodeName\":\"mycc\",
 	\"chaincodePath\":\"$CC_SRC_PATH\",
 	\"chaincodeType\": \"$LANGUAGE\",
@@ -180,7 +180,7 @@ curl -s -X POST \
   -H "authorization: Bearer $ORG3_TOKEN" \
   -H "content-type: application/json" \
   -d "{
-	\"peers\": [\"peer0.org3.example.com\",\"peer1.org3.example.com\"],
+	\"peers\": [\"peer0.org3.example.com\"],
 	\"chaincodeName\":\"mycc\",
 	\"chaincodePath\":\"$CC_SRC_PATH\",
 	\"chaincodeType\": \"$LANGUAGE\",
