@@ -82,7 +82,7 @@ curl -s -X POST \
   -H "authorization: Bearer <put JSON Web Token here>" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["peer0.org3.example.com"],
+	"peers": ["peer0.org2.example.com"],
 	"fcn":"ngoInvoke",
 	"args":["REQ1","volunteer_NAME"]
 }'
@@ -95,7 +95,7 @@ Returns Success
 
 ```
 curl -s -X GET \
-  "http://10.53.18.86:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=query&args=%5B%27%27%2C%27%27%5D" \
+  "http://10.53.18.86:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org2.example.com&fcn=query&args=%5B%27%27%2C%27%27%5D" \
   -H "authorization: Bearer $ORG2_TOKEN" \
   -H "content-type: application/json"
 ```
@@ -111,7 +111,7 @@ curl -s -X POST \
   -H "authorization: Bearer <put JSON Web Token here>" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["peer0.org2.example.com"],
+	"peers": ["peer0.org3.example.com"],
 	"fcn":"volunteerInvoke",
 	"args":["REQ1"]
 }'
@@ -124,7 +124,7 @@ Returns Success
 
 ```
 curl -s -X GET \
-  "http://10.53.18.86:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=query&args=%5B%27%27%2C%27%27%5D" \
+  "http://10.53.18.86:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org3.example.com&fcn=query&args=%5B%27%27%2C%27%27%5D" \
   -H "authorization: Bearer $ORG3_TOKEN" \
   -H "content-type: application/json"
 ```
