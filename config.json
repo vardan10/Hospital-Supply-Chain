@@ -7,8 +7,19 @@
    "eventWaitTime":"30000",
    "admins":[
       {
+         "org":"Org1",
          "username":"admin",
-         "secret":"adminpw"
+         "secret":"ca14fd09d7"
+      },
+      {
+         "org":"Org2",
+         "username":"admin",
+         "secret":"34d65f7ba0"
+      },
+      {
+         "org":"Org3",
+         "username":"admin",
+         "secret":"d048aa92c2"
       }
    ]
 }
