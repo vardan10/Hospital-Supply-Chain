@@ -198,42 +198,42 @@ peers:
 #
 certificateAuthorities:
   ca-org1:
-    url: https://admin:ca14fd09d7@n8b3441377b3547849d5cd7ccea3eb298-org1-ca.uk02.blockchain.ibm.com:31011
+    url: https://localhost:7054
     # the properties specified under this object are passed to the 'http' client verbatim when
     # making the request to the Fabric-CA server
     httpOptions:
-      verify: true
+      verify: false
     tlsCACerts:
-      path: artifacts/bluemix/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
+      path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
 
     # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
     # needed to enroll and invoke new users.
     registrar:
       - enrollId: admin
-        enrollSecret: ca14fd09d7
+        enrollSecret: adminpw
     # [Optional] The optional name of the CA.
-    caName: org1CA
+    caName: ca-org1
 
   ca-org2:
-    url: https://admin:34d65f7ba0@n8b3441377b3547849d5cd7ccea3eb298-org2-ca.uk02.blockchain.ibm.com:31011
+    url: https://localhost:8054
     httpOptions:
       verify: false
     tlsCACerts:
-      path: artifacts/bluemix/crypto-config/peerOrganizations/org2.example.com/ca/ca.org2.example.com-cert.pem
+      path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/ca/ca.org2.example.com-cert.pem
     registrar:
       - enrollId: admin
-        enrollSecret: 34d65f7ba0
+        enrollSecret: adminpw
     # [Optional] The optional name of the CA.
-    caName: org2CA
+    caName: ca-org2
 
   ca-org3:
-    url: https://admin:d048aa92c2@n8b3441377b3547849d5cd7ccea3eb298-org3-ca.uk02.blockchain.ibm.com:31011
+    url: https://localhost:9054
     httpOptions:
-      verify: true
+      verify: false
     tlsCACerts:
-      path: artifacts/bluemix/crypto-config/peerOrganizations/org3.example.com/ca/ca.org3.example.com-cert.pem
+      path: artifacts/channel/crypto-config/peerOrganizations/org3.example.com/ca/ca.org3.example.com-cert.pem
     registrar:
       - enrollId: admin
-        enrollSecret: d048aa92c2
+        enrollSecret: adminpw
     # [Optional] The optional name of the CA.
-    caName: org3CA
+    caName: ca-org3
