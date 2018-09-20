@@ -40,9 +40,8 @@ var store_path = path.join(__dirname, '/../fabric-client-kv-org1');
 console.log('Store path:'+store_path);
 var tx_id = null;
 
-// create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
-Fabric_Client.newDefaultKeyValueStore({ path: store_path
-}).then((state_store) => {
+	// create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
+	var state_store = await Fabric_Client.newDefaultKeyValueStore({ path: store_path})
 
 	console.log('=========== Hello =============' + state_store)
 
@@ -66,8 +65,7 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 	console.log('=========== Hello 3 =============')
 
 	// get the enrolled user from persistence, this user will sign all requests
-	return fabric_client.getUserContext(username, true);
-}).then((user_from_store) => {
+	var user_from_store = await fabric_client.getUserContext(username, true);
 
 	console.log('=========== Hello 4 =============' + user_from_store)
 
@@ -97,8 +95,8 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 	};
 
 	// send the transaction proposal to the peers
-	return channel.sendTransactionProposal(request);
-}).then((results) => {
+	let results = await channel.sendTransactionProposal(request);
+
 	var proposalResponses = results[0];
 	var proposal = results[1];
 	let isProposalGood = false;
@@ -172,28 +170,14 @@ Fabric_Client.newDefaultKeyValueStore({ path: store_path
 				promises.push(invokeEventPromise);
 			});
 
-		return Promise.all(promises);
+		results = Promise.all(promises);
 	} else {
 		console.error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
 		throw new Error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
 	}
-}).then((results) => {
-	console.log('Send transaction promise and event listener promise have completed' + results);
-	// check the results in the order the promises were added to the promise all list
-	if (results && results[0] && results[0].status === 'SUCCESS') {
-		console.log('Successfully sent transaction to the orderer.');
-	} else {
-		console.error('Failed to order the transaction. Error code: ' + results[0].status);
-	}
 
-	if(results && results[1] && results[1].event_status === 'VALID') {
-		console.log('Successfully committed the change to the ledger by the peer');
-	} else {
-		console.log('Transaction failed to be committed to the ledger due to ::'+results[1].event_status);
-	}
-}).catch((err) => {
-	console.error('Failed to invoke successfully :: ' + err);
-});
+	return tx_id.getTransactionID();
+
 
 };
 
