@@ -54,6 +54,7 @@ var queryChaincode = async function(peer, channelName, chaincodeName, args, fcn,
 			member_user = user_from_store;
 		} else {
 			throw new Error('Failed to get user1.... run registerUser.js');
+			return {"Success":false,"message":"User Not Enrolled to Blockchain"};
 		}
 
 		// queryCar chaincode function - requires 1 argument, ex: args: ['CAR4'],
@@ -72,26 +73,18 @@ var queryChaincode = async function(peer, channelName, chaincodeName, args, fcn,
 		if (query_responses && query_responses.length == 1) {
 			if (query_responses[0] instanceof Error) {
 				console.error("error from query = ", query_responses[0]);
+				return {"Success":false,"message":"error from query = " + query_responses[0]};
 			} else {
 				console.log("Response is ", query_responses[0].toString());
-				return query_responses[0].toString();
+				return {"success":true,"responce":JSON.parse(query_responses[0].toString())};
 			}
 
 		} else {
 			console.log("No payloads were returned from query");
+			return {"Success":false,"message":"No payloads were returned from query"};
 		}
 
 };
-
-
-
-
-
-
-
-
-
-
 
 var getBlockByNumber = async function(peer, channelName, blockNumber, username, org_name) {
 	try {
