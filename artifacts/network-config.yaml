@@ -44,11 +44,11 @@ channels:
     # operational decisions to share loads from applications among the orderers.  The values must
     # be "names" of orgs defined under "organizations/peers"
     orderers:
-      - orderer.example.com
+      - orderer
 
     # Required. list of peers from participating orgs
     peers:
-      peer0.org1.example.com:
+      org1-peer1:
         # [Optional]. will this peer be sent transaction proposals for endorsement? The peer must
         # have the chaincode installed. The app can also use this property to decide which peers
         # to send the chaincode install request. Default: true
@@ -68,13 +68,13 @@ channels:
         # Default: true
         eventSource: true
 
-      peer0.org2.example.com:
+      org2-peer1:
         endorsingPeer: true
         chaincodeQuery: true
         ledgerQuery: true
         eventSource: true
 
-      peer0.org3.example.com:
+      org3-peer5025:
         endorsingPeer: true
         chaincodeQuery: true
         ledgerQuery: true
@@ -85,17 +85,17 @@ channels:
     # this list with the query results of getInstalledChaincodes() and getInstantiatedChaincodes()
     chaincodes:
       # the format follows the "cannonical name" of chaincodes by fabric code
-      - mycc:v0
+      - mycc:v1
 
 #
 # list of participating organizations in this network
 #
 organizations:
   Org1:
-    mspid: Org1MSP
+    mspid: org1
 
     peers:
-      - peer0.org1.example.com
+      - org1-peer1
 
     # [Optional]. Certificate Authorities issue certificates for identification purposes in a Fabric based
     # network. Typically certificates provisioning is done in a separate process outside of the
@@ -112,10 +112,8 @@ organizations:
     # convenience in development mode, production systems should not expose sensitive information
     # this way. The SDK should allow applications to set the org admin identity via APIs, and only use
     # this route as an alternative when it exists.
-    adminPrivateKey:
-      path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/90fc6973b235c945729e056ac64c5d3cc838981a686219fb0bf32fdbe01c7879_sk
     signedCert:
-      path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
+      path: artifacts/bluemix/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
 
   # the profile will contain public information about organizations other than the one it belongs to.
   # These are necessary information to make transaction lifecycles work, including MSP IDs and
@@ -125,24 +123,20 @@ organizations:
   Org2:
     mspid: Org2MSP
     peers:
-      - peer0.org2.example.com
+      - org2-peer1
     certificateAuthorities:
       - ca-org2
-    adminPrivateKey:
-      path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/a7ba34b5031015f28822e71730368e0fa4b46e77c844ef3a012f8846cc5269bf_sk
     signedCert:
-      path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem
+      path: artifacts/bluemix/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem
 
   Org3:
     mspid: Org3MSP
     peers:
-      - peer0.org3.example.com
+      - org3-peer5025
     certificateAuthorities:
       - ca-org3
-    adminPrivateKey:
-      path: artifacts/channel/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/keystore/4ad98f6df6e92e53d5f106f0b8d6c07f74f7e73dcc5c7414069f6dd6c07e6bf2_sk
     signedCert:
-      path: artifacts/channel/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/signcerts/Admin@org3.example.com-cert.pem
+      path: artifacts/bluemix/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp/signcerts/Admin@org3.example.com-cert.pem
 
 
 #
@@ -151,44 +145,44 @@ organizations:
 # SDK is implementation specific. Consult each SDK's documentation for its handling of orderers.
 #
 orderers:
-  orderer.example.com:
-    url: grpcs://localhost:7050
+  orderer:
+    url: grpcs://n8b3441377b3547849d5cd7ccea3eb298-orderer.uk02.blockchain.ibm.com:31001
 
     # these are standard properties defined by the gRPC library
     # they will be passed in as-is to gRPC client constructor
     grpcOptions:
-      ssl-target-name-override: orderer.example.com
+      ssl-target-name-override: null
 
     tlsCACerts:
-      path: artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt
+      path: artifacts/bluemix/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt
 
 #
 # List of peers to send various requests to, including endorsement, query
 # and event listener registration.
 #
 peers:
-  peer0.org1.example.com:
+  org1-peer1:
     # this URL is used to send endorsement and query requests
-    url: grpcs://localhost:7051
+    url: grpcs://n8b3441377b3547849d5cd7ccea3eb298-org1-peer1.uk02.blockchain.ibm.com:31002
 
     grpcOptions:
-      ssl-target-name-override: peer0.org1.example.com
+      ssl-target-name-override: null
     tlsCACerts:
-      path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      path: artifacts/bluemix/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 
-  peer0.org2.example.com:
-    url: grpcs://localhost:8051
+  org2-peer1:
+    url: grpcs://n8b3441377b3547849d5cd7ccea3eb298-org2-peer1.uk02.blockchain.ibm.com:31002
     grpcOptions:
-      ssl-target-name-override: peer0.org2.example.com
+      ssl-target-name-override: null
     tlsCACerts:
-      path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
+      path: artifacts/bluemix/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
 
-  peer0.org3.example.com:
-    url: grpcs://localhost:9051
+  org3-peer5025:
+    url: grpcs://n8b3441377b3547849d5cd7ccea3eb298-org3-peer5025.uk02.blockchain.ibm.com:31002
     grpcOptions:
-      ssl-target-name-override: peer0.org3.example.com
+      ssl-target-name-override: null
     tlsCACerts:
-      path: artifacts/channel/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
+      path: artifacts/bluemix/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
 
 
 #

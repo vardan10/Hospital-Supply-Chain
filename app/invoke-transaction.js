@@ -14,75 +14,124 @@
  *  limitations under the License.
  */
 'use strict';
+var creds = require('./creds.json')
 var path = require('path');
 var fs = require('fs');
 var util = require('util');
-var hfc = require('fabric-client');
+var Fabric_Client = require('fabric-client');
 var helper = require('./helper.js');
 var logger = helper.getLogger('invoke-chaincode');
 
 var invokeChaincode = async function(peerNames, channelName, chaincodeName, fcn, args, username, org_name) {
-	logger.debug(util.format('\n============ invoke transaction on channel %s ============\n', channelName));
-	var error_message = null;
-	var tx_id_string = null;
-	try {
-		// first setup the client for this org
-		var client = await helper.getClientForOrg(org_name, username);
-		logger.debug('Successfully got the fabric client for the organization "%s"', org_name);
-		var channel = client.getChannel(channelName);
-		if(!channel) {
-			let message = util.format('Channel %s was not defined in the connection profile', channelName);
-			logger.error(message);
-			throw new Error(message);
-		}
-		var tx_id = client.newTransactionID();
-		// will need the transaction ID string for the event registration later
-		tx_id_string = tx_id.getTransactionID();
+var fabric_client = new Fabric_Client();
 
-		// send proposal to endorser
+// setup the fabric network
+var channel = fabric_client.newChannel(channelName);
+var peer = fabric_client.newPeer(creds.peers["org1-peer1"].url, { pem: creds.peers["org1-peer1"].tlsCACerts.pem , 'ssl-target-name-override': null});
+channel.addPeer(peer);
+var order = fabric_client.newOrderer(creds.orderers.orderer.url, { pem: creds.orderers.orderer.tlsCACerts.pem , 'ssl-target-name-override': null})
+channel.addOrderer(order);
+
+console.log(channel);
+
+//
+var member_user = null;
+var store_path = path.join(__dirname, '/../fabric-client-kv-org1');
+console.log('Store path:'+store_path);
+var tx_id = null;
+
+// create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
+Fabric_Client.newDefaultKeyValueStore({ path: store_path
+}).then((state_store) => {
+
+	console.log('=========== Hello =============' + state_store)
+
+
+	// assign the store to the fabric client
+	fabric_client.setStateStore(state_store);
+
+	console.log('=========== Hello 1 =============')
+
+	var crypto_suite = Fabric_Client.newCryptoSuite();
+	// use the same location for the state store (where the users' certificate are kept)
+	// and the crypto store (where the users' keys are kept)
+	var crypto_store = Fabric_Client.newCryptoKeyStore({path: store_path});
+
+
+	console.log('=========== Hello 2 =============')
+
+	crypto_suite.setCryptoKeyStore(crypto_store);
+	fabric_client.setCryptoSuite(crypto_suite);
+
+	console.log('=========== Hello 3 =============')
+
+	// get the enrolled user from persistence, this user will sign all requests
+	return fabric_client.getUserContext(username, true);
+}).then((user_from_store) => {
+
+	console.log('=========== Hello 4 =============' + user_from_store)
+
+	if (user_from_store && user_from_store.isEnrolled()) {
+		console.log('Successfully loaded user1 from persistence');
+		member_user = user_from_store;
+	} else {
+		throw new Error('Failed to get user1.... run registerUser.js');
+	}
+
+	// get a transaction id object based on the current user assigned to fabric client
+	tx_id = fabric_client.newTransactionID();
+	console.log("Assigning transaction_id: ", tx_id._transaction_id);
+
+	// createCar chaincode function - requires 5 args, ex: args: ['CAR12', 'Honda', 'Accord', 'Black', 'Tom'],
+	// changeCarOwner chaincode function - requires 2 args , ex: args: ['CAR10', 'Dave'],
+	// must send the proposal to endorsing peers
+
+	console.log(channel);
+
+	var request = {
+		chaincodeId: chaincodeName,
+		fcn: fcn,
+		args: args,
+		chainId: channelName,
+		txId: tx_id
+	};
+
+	// send the transaction proposal to the peers
+	return channel.sendTransactionProposal(request);
+}).then((results) => {
+	var proposalResponses = results[0];
+	var proposal = results[1];
+	let isProposalGood = false;
+	if (proposalResponses && proposalResponses[0].response &&
+		proposalResponses[0].response.status === 200) {
+			isProposalGood = true;
+			console.log('Transaction proposal was good');
+		} else {
+			console.error('Transaction proposal was bad' + results);
+		}
+	if (isProposalGood) {
+		console.log(util.format(
+			'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s"',
+			proposalResponses[0].response.status, proposalResponses[0].response.message));
+
+		// build up the request for the orderer to have the transaction committed
 		var request = {
-			targets: peerNames,
-			chaincodeId: chaincodeName,
-			fcn: fcn,
-			args: args,
-			chainId: channelName,
-			txId: tx_id
+			proposalResponses: proposalResponses,
+			proposal: proposal
 		};
 
-		let results = await channel.sendTransactionProposal(request);
+		// set the transaction listener and set a timeout of 30 sec
+		// if the transaction did not get committed within the timeout period,
+		// report a TIMEOUT status
+		var transaction_id_string = tx_id.getTransactionID(); //Get the transaction ID string to be used by the event processing
+		var promises = [];
 
-		// the returned object has both the endorsement results
-		// and the actual proposal, the proposal will be needed
-		// later when we send a transaction to the orderer
-		var proposalResponses = results[0];
-		var proposal = results[1];
+		var sendPromise = channel.sendTransaction(request);
+		promises.push(sendPromise); //we want the send transaction first, so that we know where to check status
 
-		logger.debug(results)
-
-		// lets have a look at the responses to see if they are
-		// all good, if good they will also include signatures
-		// required to be committed
-		var all_good = true;
-		for (var i in proposalResponses) {
-			let one_good = false;
-			if (proposalResponses && proposalResponses[i].response &&
-				proposalResponses[i].response.status === 200) {
-				one_good = true;
-				logger.info('invoke chaincode proposal was good');
-			} else {
-				logger.error('invoke chaincode proposal was bad' + proposalResponses[i]);
-			}
-			all_good = all_good & one_good;
-		}
-
-		if (all_good) {
-			logger.info(util.format(
-				'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s", metadata - "%s", endorsement signature: %s',
-				proposalResponses[0].response.status, proposalResponses[0].response.message,
-				proposalResponses[0].response.payload, proposalResponses[0].endorsement.signature));
-
-			// wait for the channel-based event hub to tell us
-			// that the commit was good or bad on each peer in our organization
+		// get an eventhub once the fabric client has a user assigned. The user
+		// is required bacause the event registration must be signed
+		
 			var promises = [];
 			let event_hubs = channel.getChannelEventHubsForOrg();
 			event_hubs.forEach((eh) => {
@@ -93,7 +142,7 @@ var invokeChaincode = async function(peerNames, channelName, chaincodeName, fcn,
 						logger.error(message);
 						eh.disconnect();
 					}, 3000);
-					eh.registerTxEvent(tx_id_string, (tx, code, block_num) => {
+					eh.registerTxEvent(tx_id.getTransactionID(), (tx, code, block_num) => {
 						logger.info('The chaincode invoke chaincode transaction has been committed on peer %s',eh.getPeerAddr());
 						logger.info('Transaction %s has status of %s in blocl %s', tx, code, block_num);
 						clearTimeout(event_timeout);
@@ -123,58 +172,29 @@ var invokeChaincode = async function(peerNames, channelName, chaincodeName, fcn,
 				promises.push(invokeEventPromise);
 			});
 
-			var orderer_request = {
-				txId: tx_id,
-				proposalResponses: proposalResponses,
-				proposal: proposal
-			};
-			var sendPromise = channel.sendTransaction(orderer_request);
-			// put the send to the orderer last so that the events get registered and
-			// are ready for the orderering and committing
-			promises.push(sendPromise);
-			let results = await Promise.all(promises);
-			logger.debug(util.format('------->>> R E S P O N S E : %j', results));
-			let response = results.pop(); //  orderer results are last in the results
-			if (response.status === 'SUCCESS') {
-				logger.info('Successfully sent transaction to the orderer.');
-			} else {
-				error_message = util.format('Failed to order the transaction. Error code: %s',response.status);
-				logger.debug(error_message);
-			}
-
-			// now see what each of the event hubs reported
-			for(let i in results) {
-				let event_hub_result = results[i];
-				let event_hub = event_hubs[i];
-				logger.debug('Event results for event hub :%s',event_hub.getPeerAddr());
-				if(typeof event_hub_result === 'string') {
-					logger.debug(event_hub_result);
-				} else {
-					if(!error_message) error_message = event_hub_result.toString();
-					logger.debug(event_hub_result.toString());
-				}
-			}
-		} else {
-			error_message = util.format('Failed to send Proposal and receive all good ProposalResponse');
-			logger.debug(error_message);
-		}
-	} catch (error) {
-		logger.error('Failed to invoke due to error: ' + error.stack ? error.stack : error);
-		error_message = error.toString();
-	}
-
-	if (!error_message) {
-		let message = util.format(
-			'Successfully invoked the chaincode %s to the channel \'%s\' for transaction ID: %s',
-			org_name, channelName, tx_id_string);
-		logger.info(message);
-
-		return tx_id_string;
+		return Promise.all(promises);
 	} else {
-		let message = util.format('Failed to invoke chaincode. cause:%s',error_message);
-		logger.error(message);
-		throw new Error(message);
+		console.error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
+		throw new Error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
 	}
+}).then((results) => {
+	console.log('Send transaction promise and event listener promise have completed' + results);
+	// check the results in the order the promises were added to the promise all list
+	if (results && results[0] && results[0].status === 'SUCCESS') {
+		console.log('Successfully sent transaction to the orderer.');
+	} else {
+		console.error('Failed to order the transaction. Error code: ' + results[0].status);
+	}
+
+	if(results && results[1] && results[1].event_status === 'VALID') {
+		console.log('Successfully committed the change to the ledger by the peer');
+	} else {
+		console.log('Transaction failed to be committed to the ledger due to ::'+results[1].event_status);
+	}
+}).catch((err) => {
+	console.error('Failed to invoke successfully :: ' + err);
+});
+
 };
 
 exports.invokeChaincode = invokeChaincode;
