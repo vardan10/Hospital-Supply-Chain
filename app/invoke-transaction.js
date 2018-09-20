@@ -26,18 +26,32 @@ var invokeChaincode = async function(peerNames, channelName, chaincodeName, fcn,
 	try{
 		var fabric_client = new Fabric_Client();
 
+		// Get Peers and KVStore
+		var orgs = Fabric_Client.getConfigSetting('orgs');
+
+		let peerName = '';
+		let kvStore = '';
+		
+		orgs.forEach(function(value){
+			if (value.org == org_name){
+				peerName = value.peerName;
+				kvStore = value.kvStore;
+			}
+		});
+
+
+
 		// setup the fabric network
 		var channel = fabric_client.newChannel(channelName);
-		var peer = fabric_client.newPeer(creds.peers["org1-peer1"].url, { pem: creds.peers["org1-peer1"].tlsCACerts.pem , 'ssl-target-name-override': null});
+		var peer = fabric_client.newPeer(creds.peers[peerName].url, { pem: creds.peers[peerName].tlsCACerts.pem , 'ssl-target-name-override': null});
 		channel.addPeer(peer);
 		var order = fabric_client.newOrderer(creds.orderers.orderer.url, { pem: creds.orderers.orderer.tlsCACerts.pem , 'ssl-target-name-override': null})
 		channel.addOrderer(order);
 
 		console.log(channel);
 
-		//
 		var member_user = null;
-		var store_path = path.join(__dirname, '/../fabric-client-kv-org1');
+		var store_path = path.join(__dirname, '/../' + kvStore);
 		console.log('Store path:'+store_path);
 		var tx_id = null;
 

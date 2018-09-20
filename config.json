@@ -21,5 +21,22 @@
          "username":"admin",
          "secret":"d048aa92c2"
       }
+   ],
+   "orgs":[
+      {
+         "org":"Org1",
+         "peerName":"org1-peer1",
+         "kvStore":"fabric-client-kv-org1"
+      },
+      {
+         "org":"Org2",
+         "username":"org1-peer2",
+         "secret":"fabric-client-kv-org2"
+      },
+      {
+         "org":"Org3",
+         "username":"org3-peer5025",
+         "secret":"fabric-client-kv-org3"
+      }
    ]
 }
